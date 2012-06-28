@@ -1,0 +1,232 @@
+create or replace
+package body PLSQLPARSERTESTPACKAGE
+as
+
+/*============================================================================*/
+function Empty_Arguments_Return_Number return number
+as
+begin
+    return GC_NUMBER_FOR_RETURN;
+end Empty_Arguments_Return_Number;
+
+
+/*============================================================================*/
+function Empty_Arguments_Return_String return varchar2
+as
+begin
+    return GC_VARCHAR2_FOR_RETURN;
+end Empty_Arguments_Return_String;
+
+
+/*============================================================================*/
+function Empty_Arguments_Return_Cursor return SYS_REFCURSOR
+as
+
+    LCUR SYS_REFCURSOR;
+
+begin
+    open LCUR
+     for select GC_NUMBER_FOR_RETURN as val_number,
+                GC_VARCHAR2_FOR_RETURN as val_varchar
+           from dual;
+
+    return LCUR;
+end Empty_Arguments_Return_Cursor;
+
+
+/*============================================================================*/
+function Return_Empty_Cursor return SYS_REFCURSOR
+as
+
+    LCUR SYS_REFCURSOR;
+
+begin
+    open LCUR
+     for select *
+           from dual
+          where 1 = 2;
+
+    return LCUR;
+end Return_Empty_Cursor;
+
+
+/*============================================================================*/
+function Return_Big_Cursor return SYS_REFCURSOR
+as
+
+    LCUR SYS_REFCURSOR;
+
+begin
+    open LCUR
+     for select GC_NUMBER_FOR_RETURN as val_number,
+                GC_VARCHAR2_FOR_RETURN as val_varchar
+           from dual
+
+         UNION ALL
+
+         select GC_NUMBER_FOR_RETURN as val_number,
+                GC_VARCHAR2_FOR_RETURN as val_varchar
+           from dual
+
+         UNION ALL
+
+         select GC_NUMBER_FOR_RETURN as val_number,
+                GC_VARCHAR2_FOR_RETURN as val_varchar
+           from dual;
+
+    return LCUR;
+end Return_Big_Cursor;
+
+
+/*============================================================================*/
+function Empty_Arguments_Return_Clob return clob
+as
+
+    LCLOB CLOB;
+
+begin
+
+    LCLOB := GC_CLOB_FOR_RETURN;
+
+    return LCLOB;
+end Empty_Arguments_Return_Clob;
+
+
+/*============================================================================*/
+function In_Number_Return_Number(
+    i_number number
+    ) return number
+as
+begin
+    return i_number;
+end In_Number_Return_Number;
+
+
+/*============================================================================*/
+function In_Varchar2_Return_Varchar2(
+    i_varchar2 varchar2
+    ) return varchar2
+as
+begin
+    return i_varchar2;
+end In_Varchar2_Return_Varchar2;
+
+
+/*============================================================================*/
+function In_Complex_Return_Cursor(
+    i_number number,
+    i_varchar2 varchar2,
+    i_clob clob
+    ) return SYS_REFCURSOR
+as
+
+    LCUR SYS_REFCURSOR;
+
+begin
+    open LCUR
+     for select i_number as val_number,
+                i_varchar2 as val_varchar,
+                i_clob as val_clob
+           from dual;
+
+    return LCUR;
+end In_Complex_Return_Cursor;
+
+
+/*============================================================================*/
+function Out_Number_Return_Number(
+    o_number out number
+    ) return number
+as
+begin
+    o_number := GC_NUMBER_FOR_RETURN;
+    return GC_NUMBER_FOR_RETURN;
+end Out_Number_Return_Number;
+
+
+/*============================================================================*/
+function Out_Arguments_Return_Cursor(
+    o_number out number,
+    o_varchar2 out varchar2,
+    o_clob out clob,
+    o_cursor out SYS_REFCURSOR
+    ) return SYS_REFCURSOR
+AS
+
+    LCUR SYS_REFCURSOR;
+
+begin
+    o_number := GC_NUMBER_FOR_RETURN;
+    o_varchar2 := GC_VARCHAR2_FOR_RETURN;
+    o_clob := GC_CLOB_FOR_RETURN;
+
+    open o_cursor
+     for select GC_NUMBER_FOR_RETURN as val_number,
+                GC_VARCHAR2_FOR_RETURN as val_varchar,
+                GC_CLOB_FOR_RETURN as val_clob
+           from dual;
+
+    open LCUR
+     for select GC_NUMBER_FOR_RETURN as val_number,
+                GC_VARCHAR2_FOR_RETURN as val_varchar,
+                GC_CLOB_FOR_RETURN as val_clob
+           from dual;
+    return LCUR;
+end Out_Arguments_Return_Cursor;
+
+
+/*============================================================================*/
+function In_Out_Arguments_Return_Cursor(
+    io_number in out number,
+    io_varchar2 in out varchar2,
+    io_clob in out clob
+    ) return SYS_REFCURSOR
+as
+
+    LCUR SYS_REFCURSOR;
+
+begin
+    kr_debug.Say('In_Out_Arguments_Return_Cursor.ENTERED ' || chr(10) ||
+        ' io_number=' || io_number || chr(10) ||
+        ' io_varchar2=' || io_varchar2 || chr(10) ||
+        ' io_clob=' || io_clob,
+        25
+        );
+
+    io_number := io_number + GC_NUMBER_FOR_RETURN;
+    io_varchar2 := io_varchar2 || GC_VARCHAR2_FOR_RETURN;
+    dbms_lob.append(io_clob, GC_CLOB_FOR_RETURN);
+
+    open LCUR
+     for select GC_NUMBER_FOR_RETURN as val_number,
+                GC_VARCHAR2_FOR_RETURN as val_varchar,
+                GC_CLOB_FOR_RETURN as val_clob
+           from dual;
+
+    kr_debug.Say('In_Out_Arguments_Return_Cursor.FINISHED', 25);
+
+    return LCUR;
+
+end In_Out_Arguments_Return_Cursor;
+
+
+/*============================================================================*/
+procedure In_Args_Out_Cursor(
+    i_number number,
+    i_varchar2 varchar2,
+    i_clob clob,
+    o_cur out SYS_REFCURSOR
+    )
+as
+begin
+    open o_cur
+     for select i_number,
+                i_varchar2,
+                i_clob
+           from dual;
+
+    kr_debug.Say('In_Args_Out_Cursor.FINISHED', 25);
+
+end In_Args_Out_Cursor;
+
+end PLSQLPARSERTESTPACKAGE;

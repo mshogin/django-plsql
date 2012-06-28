@@ -1,0 +1,11 @@
+@staticmethod
+    def {{ name }}({% if args %}{% for arg in args %}{{ arg.arg_name }}, {% endfor %}{% endif %}):
+        cursor = {{ package_name }}.connection.cursor()
+
+        {% for arg in args %}{{ arg.before_calling }}
+        {% endfor %}
+        lcur = cursor.callfunc('{{ package_name }}.{{ name }}', {{ return_type }}{% if args %}, [{% for arg in args %}{{ arg.name }}, {% endfor %}]{% endif %})
+        {% for arg in args %}{{ arg.after_calling }}
+        {% endfor %}
+        return Cursor(lcur){% for arg in args %}{% if arg.return_statement %},{% endif %}{{ arg.return_statement }}{% endfor %}
+

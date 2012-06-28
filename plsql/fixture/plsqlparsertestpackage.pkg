@@ -1,0 +1,80 @@
+create or replace
+PACKAGE PLSQLPARSERTESTPACKAGE AS
+
+----------------------------------------------------------------------------
+--    Constants
+----------------------------------------------------------------------------
+
+GC_NUMBER_FOR_RETURN constant number := 5;
+GC_VARCHAR2_FOR_RETURN constant varchar2(10) := 'varchar2';
+GC_CLOB_FOR_RETURN constant clob := 'clob';
+
+
+----------------------------------------------------------------------------
+--    Functions
+----------------------------------------------------------------------------
+
+function Empty_Arguments_Return_Number return number;
+
+
+function Empty_Arguments_Return_String return varchar2;
+
+
+function Empty_Arguments_Return_Cursor return sys_refcursor;
+
+
+function Return_Empty_Cursor return sys_refcursor;
+
+
+function Return_Big_Cursor return sys_refcursor;
+
+
+function Empty_Arguments_Return_Clob return clob;
+
+
+function In_Number_Return_Number(
+    i_number number
+    ) return number;
+
+
+function In_Varchar2_Return_Varchar2(
+    i_varchar2 varchar2
+    ) return varchar2;
+
+
+function In_Complex_Return_Cursor(
+    i_number number,
+    i_varchar2 varchar2,
+    i_clob clob
+    ) return sys_refcursor;
+
+
+function Out_Number_Return_Number(
+    o_number out number
+    ) return number;
+
+
+function Out_Arguments_Return_Cursor(
+    o_number out number,
+    o_varchar2 out varchar2,
+    o_clob out clob,
+    o_cursor out sys_refcursor
+    ) return sys_refcursor;
+
+
+function In_Out_Arguments_Return_Cursor(
+    io_number in out number,
+    io_varchar2 in out varchar2,
+    io_clob in out clob
+    ) return sys_refcursor;
+
+
+procedure In_Args_Out_Cursor(
+    i_number number,
+    i_varchar2 varchar2,
+    i_clob clob,
+    o_cur out sys_refcursor
+    );
+
+
+END PLSQLPARSERTESTPACKAGE;

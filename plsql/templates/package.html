@@ -1,0 +1,44 @@
+import cx_Oracle
+
+class Cursor():
+    def __init__(self, cursor):
+        self.cursor = cursor
+        self.descs = self.cursor.description
+
+    def next(self):
+        row = self.cursor.fetchone()
+        if not row:
+            self.cursor.close()
+            return None
+
+        dict = {}
+        for index in range(len(row)):
+            if self.descs[index][1] is cx_Oracle.CLOB:
+                dict[self.descs[index][0].lower()] = row[index].read()
+            else:
+                dict[self.descs[index][0].lower()] = row[index]
+        return dict
+
+    def fetch_all(self):
+        result = []
+
+        row = self.cursor.fetchone()
+        while row:
+            dict = {}
+            for index in range(len(row)):
+                if self.descs[index][1] is cx_Oracle.CLOB:
+                    dict[self.descs[index][0].lower()] = row[index].read()
+                else:
+                    dict[self.descs[index][0].lower()] = row[index]
+            result.append(dict)
+            row = self.cursor.fetchone()
+
+        self.cursor.close()
+        return result
+
+class {{ package_name }}:
+    connection = None
+
+{% for member in members %}
+    {{ member|safe }}
+{% endfor %}

@@ -1,0 +1,8 @@
+@staticmethod
+    def {{ name }}({% if args %}{% for arg in args %}{{ arg.arg_name }}, {% endfor %}{% endif %}):
+        cursor = {{ package_name }}.connection.cursor()
+        result = cursor.callfunc('{{ package_name }}.{{ name }}', {{ return_type }}{% if args %}, [{% for arg in args %}{{ arg.name }}, {% endfor %}]{% endif %})
+        result = result.read()
+        cursor.close()
+
+        return result
