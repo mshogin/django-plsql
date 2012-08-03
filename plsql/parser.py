@@ -1,7 +1,5 @@
 import re
 
-__author__ = 'shogin'
-
 class PlSqlParser:
 
     def get_package_members(self, package_specification):

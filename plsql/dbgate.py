@@ -2,8 +2,6 @@ import os
 import re
 import cx_Oracle
 
-__author__ = 'shogin'
-
 class OracleHomeError(EnvironmentError):
     pass
 

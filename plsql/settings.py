@@ -1,7 +1,5 @@
 import os
 
-__author__ = 'shogin'
-
 def rel(path):
     return os.path.join(os.path.abspath(os.path.dirname(__file__)), path)
 

@@ -6,8 +6,6 @@ from dbgate import DBA
 from parser import PlSqlParser
 import settings
 
-__author__ = 'shogin'
-
 """
 Oracle user_objects column identifiers
 """
